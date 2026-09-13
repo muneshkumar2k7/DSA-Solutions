@@ -270,7 +270,7 @@ if(start > end ) return start;
 int mid = start + (end-start)/2;
 
 // already available 
-if(val == arr[mid]) return -1;
+if(val == arr[mid]) return mid;
 
 if(val > arr[mid]){
     start = mid+1;
@@ -339,7 +339,20 @@ for(int i=0;i<length-1;i++){
 return -1;
 }
 
-void Before_First_Dup(int arr[], int length ,int val){
+int find_last_dup_index(int arr[], int length ){
+
+for(int i=length-1;i>=0;i--){
+ int num = arr[i];
+
+ if(find_freq(arr,0,i-1,num,length)){
+    return i;
+ }
+}
+return -1;
+}
+
+
+void Before_First_Dup(int arr[], int &length ,int val){
 
     int index = find_first_dup_index(arr,length);
 if(index == -1) return;
@@ -347,9 +360,152 @@ if(index == -1) return;
         arr[i] = arr[i-1];
     }
     arr[index] = val;
+    length++;
+}
+
+
+void After_last_Dup(int arr[], int &length ,int val){
+ int index = find_last_dup_index(arr,length);
+
+ if(index == -1){
+    return;
+ }
+  
+    length++;
+  for(int i = length;i>index+1;i--){
+        arr[i] = arr[i-1];
+    }
+    arr[index+1] = val;
+    
+}
+
+int * manual_resizing(int * arr , int capacity, int size , int val){
+
+    if(size == capacity){
+        int * new_arr = new int[capacity*2];
+        for(int i=0;i<capacity;i++){
+            new_arr[i] = arr[i];
+        }
+        new_arr[capacity] = val;
+        size++;
+        delete []arr;
+        return new_arr;
+    }
+  
+ 
+    arr[size] = val;
+    size++;
+    return arr;
 
 }
+
+
+
+// Insert Elements at the end
+int * Insert_elements_at_the_end(int * arr , int elements[], int capacity , int size , int number_of_elements){
+if((number_of_elements + size) > capacity){
+
+int * new_arr = new int[(capacity + number_of_elements)*2];
+
+for(int i=0;i< size;i++){
+    new_arr[i] = arr[i];
+}
+
+
+
+for(int i=size;i<size+number_of_elements;i++){
+    new_arr[i] = elements[i-size];
+}
+
+size = size+number_of_elements;
+delete [] arr;
+return new_arr;
+}
+
+
+
+for(int i=size; i<size+number_of_elements ; i++){
+    arr[i] = elements[i-size];
+}
+
+size = size+number_of_elements;
+return arr;
+
+} 
+
+
+
+
+// insert elements at the beginning 
+int * Insert_elements_at_the_beginning(int * arr , int elements[], int capacity , int &size , int number_of_elements){
+
+    if((number_of_elements + size) > capacity){
+
+int * new_arr = new int[(size + number_of_elements)*2];
+
+
+for(int i = (number_of_elements+size-1); i >= number_of_elements; i--){
+    new_arr[i] = arr[i-number_of_elements];
+}
+
+for(int i=0;i<number_of_elements;i++){
+    new_arr[i] = elements[i];
+}
+
+size = size+number_of_elements;
+delete [] arr;
+return new_arr;
+}
+
+
+
+
+for(int i = (number_of_elements+size-1); i >= number_of_elements; i--){
+    arr[i] = arr[i-number_of_elements];
+}
+
+for(int i= 0; i<number_of_elements ; i++){
+    arr[i] = elements[i];
+}
+
+size = size+number_of_elements;
+return arr;
+
+} 
+
+// it check the space is available if it is available then it place there if not so return false
+bool enqueue(int arr[], int &front, int &rear ,int e , int& capacity ){
+    if((rear+1)%capacity == front){
+      return false;
+    }
+    
+arr[rear] =e;
+rear = (rear+1)%capacity;
+
+return true;
+}
+
+bool dequeue(int arr[], int & front , int & rear, int &capacity){
+     
+    if(front == rear){
+        return false;
+    }
+    
+    
+    front =(front+1)%capacity;
+    return true;
+}
 int main(){
-int arr[5] = {10, 20, 30};
+int arr[5] = {10, 20, 30 , 40 , 50};
+
+// Manual resizing  it is not efficient in this case because old array can't be deleted until program
+// confirm that new array size is greater than old array 
+int new_arr[8];
+
+for(int i=0;i<5;i++){
+  new_arr[i] = arr[i];
+}
+
+
 
 }
